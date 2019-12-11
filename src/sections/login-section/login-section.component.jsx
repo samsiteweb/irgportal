@@ -14,6 +14,22 @@ export const DecisionBtn = ({ firstChoice, secondChoice, size, push }) => {
 };
 
 class Login extends Component {
+  formField = [
+    {
+      label: "Credentials",
+      icon: "user",
+      iconposition: "left",
+      placeholder: "Please enter credentials",
+      type: "text"
+    },
+    {
+      label: "Password",
+      icon: "key",
+      iconposition: "left",
+      placeholder: "Please enter Password",
+      type: "text"
+    }
+  ];
   constructor(props) {
     super(props);
     this.state = {};
@@ -26,21 +42,23 @@ class Login extends Component {
         description='Please Enter your Credentials to Login'
       >
         <Form style={{ paddingTop: 20 }}>
-          <Formfield
-            label='Credentials'
-            icon='user'
-            iconposition='left'
-            placeholder='Please enter credentials'
-            type='text'
-          />
-          <Formfield
-            label='Password'
-            icon='key'
-            iconposition='left'
-            placeholder='Enter Password'
-            type='text'
-          />
+          {this.formField.map(
+            ({ label, icon, iconposition, placeholder, type }) => {
+              return (
+                <Formfield
+                  key={label}
+                  label={label}
+                  icon={icon}
+                  iconposition={iconposition}
+                  placeholder={placeholder}
+                  type={type}
+                />
+              );
+            }
+          )}
+          
         </Form>
+
         <div style={{ paddingTop: 20, textAlign: "center" }}>
           <Button
             loading={false}
