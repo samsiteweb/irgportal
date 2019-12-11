@@ -61,6 +61,7 @@ class Register extends Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.getAccountCode = this.getAccountCode.bind(this);
+    this.customAccountCode = this.customAccountCode.bind(this);
     console.log(props);
 
     this.state = {
@@ -84,7 +85,30 @@ class Register extends Component {
       console.log(this.state);
     });
   }
+  async customAccountCode() {
+    this.setState({
+      actionActive: true,
+      messageState: (
+        <MessageLabel
+          pointing='below'
+          color='olive'
+          icon='mail'
+          message='Checking Your Account Code'
+        />
+      )
+    });
 
+    await axios
+      .get(url, {
+        params: {
+          code: this.state.customCode
+        }
+      })
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => console.log(error));
+  }
   async getAccountCode() {
     this.setState({
       actionActive: true,
@@ -100,12 +124,13 @@ class Register extends Component {
     await axios
       .get(url, {
         params: {
-          email: "samthedonz@gmail.com",
-          sms: "07052085121",
+          email: this.state.email,
+          sms: this.state.contact,
           expires: "2"
         }
       })
       .then(response => {
+        console.log(response);
         this.setState({
           actionActive: !this.state.actionActive,
           messageState: (
@@ -157,33 +182,17 @@ class Register extends Component {
                 );
               }
             )}
-            {
-              this.state.messageState
-              /* {this.state.actionActive ? (
-              <Label style={{ display: "flex" }} pointing='below' color='teal'>
-                <Icon name='mail' size='large' />
-                <div>
-                  You can customize your account code by choosing Custom Code
-                  from the dropdown buttton below.
-                </div>
-              </Label>
-            ) : (
-              <Label style={{ display: "flex" }} pointing='below' color='green'>
-                <Icon name='mail' size='large' />
-                <div>
-                  Please check samthedonz@gmail.com for your account code
-                </div>
-              </Label>
-            )} */
-            }
+            {this.state.messageState}
 
             <ActionInput
+              id='code'
               options={options}
               defaultValue='get'
               color='violet'
               state={this.state.actionActive}
               placeholder='xxxx'
-              action={this.getAccountCode}
+              getChange={this.handleChange}
+              action={this.customAccountCode}
             />
             <div style={{ textAlign: "left" }}>
               <Icon name='image outline' size='massive' color='grey' />
