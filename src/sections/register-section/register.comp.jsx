@@ -1,7 +1,7 @@
-import React, { Component } from "react";
+import React, { Component, createRef } from "react";
 import CardContainer from "../../components/card-container/card_container";
 
-import { Form, Button, Icon, Label } from "semantic-ui-react";
+import { Form, Button, Icon } from "semantic-ui-react";
 import Formfield, {
   ActionInput
 } from "../../components/input-field/input_field";
@@ -57,17 +57,20 @@ const formField = [
 
 const url = "https://iregisterkids.com/prod_sup/api/NewRegistration";
 class Register extends Component {
+  inputRef = createRef();
   constructor(props) {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.getAccountCode = this.getAccountCode.bind(this);
     this.customAccountCode = this.customAccountCode.bind(this);
     this.confirmAccountCode = this.confirmAccountCode.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
     console.log(props);
 
     this.state = {
       actionActive: false,
       action: this.getAccountCode,
+      disableBox: false,
       actionText: "Generate",
       result: "",
       messageState: (
@@ -94,40 +97,17 @@ class Register extends Component {
     if (e.target.textContent === "Get Code") {
       this.setState({
         action: this.getAccountCode,
-        actionText: "Generate"
+        actionText: "Generate",
+        disableBox: true
       });
     } else if (e.target.textContent === "Custom Code") {
       this.setState({
         action: this.customAccountCode,
-        actionText: "Verify"
+        actionText: "Verify",
+        disableBox: false
       });
     }
   };
-  // async customAccountCode() {
-  //   this.setState({
-  //     actionActive: true,
-  //     messageState: (
-  //       <MessageLabel
-  //         pointing='below'
-  //         color='olive'
-  //         icon='mail'
-  //         message='Checking Your Account Code'
-  //       />
-  //     )
-  //   });
-
-  //   await axios
-  //     .get(url, {
-  //       params: {
-  //         code: this.state.customCode
-  //       }
-  //     })
-  //     .then(response => {
-  //       console.log(response);
-  //     })
-  //     .catch(error => console.log(error));
-  // }
-
   async confirmAccountCode() {
     await axios
       .get(url, {
@@ -139,9 +119,9 @@ class Register extends Component {
       .then(response => {
         console.log(response.data);
         this.setState({
+          disableBox: true,
           messageState: (
             <MessageLabel
-              pointing='below'
               color='green'
               icon='mail'
               message={`Thank you very much the code is valid. Please keep this code SECURELY`}
@@ -169,7 +149,31 @@ class Register extends Component {
           code: this.state.Code
         }
       })
-      .then(response => console.log(response.data));
+      .then(response => {
+        console.log(response.data);
+        this.setState({
+          disableBox: true,
+          messageState: (
+            <MessageLabel
+              color='green'
+              icon='mail'
+              message={`Account Code is Available. Please keep this code SECURELY for further use `}
+            />
+          )
+        });
+      })
+      .catch(e => {
+        this.setState({
+          messageState: (
+            <MessageLabel
+              pointing='below'
+              color='red'
+              icon='mail'
+              message={`${e}`}
+            />
+          )
+        });
+      });
   }
 
   async getAccountCode() {
@@ -194,6 +198,7 @@ class Register extends Component {
       })
       .then(response => {
         console.log(response.data.Result);
+
         this.setState({
           actionActive: !this.state.actionActive,
           messageState: (
@@ -206,8 +211,10 @@ class Register extends Component {
           ),
           result: response.data.Result,
           action: this.confirmAccountCode,
-          actionText: "Confirm Code"
+          actionText: "Confirm Code",
+          disableBox: false
         });
+        this.inputRef.current.focus();
       })
       .catch(error => {
         this.setState({
@@ -224,6 +231,20 @@ class Register extends Component {
       });
   }
 
+  async handleSubmit() {
+    await axios
+      .post(url, {
+        AccountCode: this.state.Code,
+        Name: this.state.name,
+        Email: this.state.Email,
+        Contact: this.state.Contact,
+        Address: this.state.Address,
+        Country: this.state.Contry
+      })
+      .then(res => {
+        console.log(res);
+      });
+  }
   render() {
     return (
       <div>
@@ -256,10 +277,12 @@ class Register extends Component {
               color='violet'
               state={this.state.actionActive}
               placeholder='xxxx'
+              disabled={this.state.disableBox}
               getChange={this.handleChange}
               getSelect={this.handleSelect}
               action={this.state.action}
               textContent={this.state.actionText}
+              ref={this.inputRef}
             />
             <div style={{ textAlign: "left" }}>
               <Icon name='image outline' size='massive' color='grey' />
@@ -270,7 +293,7 @@ class Register extends Component {
             <Button
               size='large'
               color='violet'
-              onClick={this.confirmAccountCode}
+              onClick={this.handleSubmit}
               content='submit'
             />
           </div>

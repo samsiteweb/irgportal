@@ -26,22 +26,25 @@ const Formfield = ({
     </Form.Field>
   );
 };
-
-export const ActionInput = ({
-  options,
-  state,
-  color,
-  defaultValue,
-  placeholder,
-  action,
-  getChange,
-  getSelect,
-  textContent
-}) => {
-  return (
-    <Form.Field>
+export const ActionInput = React.forwardRef(
+  (
+    {
+      options,
+      state,
+      color,
+      defaultValue,
+      placeholder,
+      action,
+      getChange,
+      getSelect,
+      textContent,
+      disabled
+    },
+    ref
+  ) => (
+    <Form.Field style={{ marginTop: "10px" }}>
       <Input type='text' placeholder={placeholder}>
-        <input onChange={getChange} id='Code' />
+        <input onChange={getChange} id='Code' disabled={disabled} ref={ref} />
         <Select
           compact
           options={options}
@@ -53,7 +56,7 @@ export const ActionInput = ({
         </Button>
       </Input>
     </Form.Field>
-  );
-};
+  )
+);
 
 export default Formfield;
