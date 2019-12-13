@@ -34,15 +34,22 @@ export const ActionInput = ({
   defaultValue,
   placeholder,
   action,
-  getChange
+  getChange,
+  getSelect,
+  textContent
 }) => {
   return (
     <Form.Field>
       <Input type='text' placeholder={placeholder}>
-        <input onChange={getChange} id='code' />
-        <Select compact options={options} defaultValue={defaultValue} />
+        <input onChange={getChange} id='Code' />
+        <Select
+          compact
+          options={options}
+          onChange={getSelect}
+          defaultValue={defaultValue}
+        />
         <Button color={color} loading={state} onClick={action}>
-          Generate
+          {textContent}
         </Button>
       </Input>
     </Form.Field>

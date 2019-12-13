@@ -62,10 +62,14 @@ class Register extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.getAccountCode = this.getAccountCode.bind(this);
     this.customAccountCode = this.customAccountCode.bind(this);
+    this.confirmAccountCode = this.confirmAccountCode.bind(this);
     console.log(props);
 
     this.state = {
       actionActive: false,
+      action: this.getAccountCode,
+      actionText: "Generate",
+      result: "",
       messageState: (
         <MessageLabel
           pointing='below'
@@ -85,30 +89,89 @@ class Register extends Component {
       console.log(this.state);
     });
   }
-  async customAccountCode() {
-    this.setState({
-      actionActive: true,
-      messageState: (
-        <MessageLabel
-          pointing='below'
-          color='olive'
-          icon='mail'
-          message='Checking Your Account Code'
-        />
-      )
-    });
+  handleSelect = e => {
+    console.log(e.target.textContent);
+    if (e.target.textContent === "Get Code") {
+      this.setState({
+        action: this.getAccountCode,
+        actionText: "Generate"
+      });
+    } else if (e.target.textContent === "Custom Code") {
+      this.setState({
+        action: this.customAccountCode,
+        actionText: "Verify"
+      });
+    }
+  };
+  // async customAccountCode() {
+  //   this.setState({
+  //     actionActive: true,
+  //     messageState: (
+  //       <MessageLabel
+  //         pointing='below'
+  //         color='olive'
+  //         icon='mail'
+  //         message='Checking Your Account Code'
+  //       />
+  //     )
+  //   });
 
+  //   await axios
+  //     .get(url, {
+  //       params: {
+  //         code: this.state.customCode
+  //       }
+  //     })
+  //     .then(response => {
+  //       console.log(response);
+  //     })
+  //     .catch(error => console.log(error));
+  // }
+
+  async confirmAccountCode() {
     await axios
       .get(url, {
         params: {
-          code: this.state.customCode
+          code: this.state.Code,
+          id: this.state.result
         }
       })
       .then(response => {
-        console.log(response);
+        console.log(response.data);
+        this.setState({
+          messageState: (
+            <MessageLabel
+              pointing='below'
+              color='green'
+              icon='mail'
+              message={`Thank you very much the code is valid. Please keep this code SECURELY`}
+            />
+          )
+        });
       })
-      .catch(error => console.log(error));
+      .catch(e => {
+        this.setState({
+          messageState: (
+            <MessageLabel
+              pointing='below'
+              color='green'
+              icon='mail'
+              message={`Wrong Code was passed. Please check your email for the right code`}
+            />
+          )
+        });
+      });
   }
+  async customAccountCode() {
+    await axios
+      .get(url, {
+        params: {
+          code: this.state.Code
+        }
+      })
+      .then(response => console.log(response.data));
+  }
+
   async getAccountCode() {
     this.setState({
       actionActive: true,
@@ -124,13 +187,13 @@ class Register extends Component {
     await axios
       .get(url, {
         params: {
-          email: this.state.email,
-          sms: this.state.contact,
+          email: this.state.Email,
+          sms: this.state.Contact,
           expires: "2"
         }
       })
       .then(response => {
-        console.log(response);
+        console.log(response.data.Result);
         this.setState({
           actionActive: !this.state.actionActive,
           messageState: (
@@ -138,9 +201,12 @@ class Register extends Component {
               pointing='below'
               color='green'
               icon='mail'
-              message='Please check samthedonz@gmail.com for your account code'
+              message={`Please check ${this.state.Email} for your account code. Please insert the code in the box below`}
             />
-          )
+          ),
+          result: response.data.Result,
+          action: this.confirmAccountCode,
+          actionText: "Confirm Code"
         });
       })
       .catch(error => {
@@ -151,7 +217,7 @@ class Register extends Component {
               pointing='below'
               color='red'
               icon='mail'
-              message={error}
+              message={`${error}`}
             />
           )
         });
@@ -185,14 +251,15 @@ class Register extends Component {
             {this.state.messageState}
 
             <ActionInput
-              id='code'
               options={options}
               defaultValue='get'
               color='violet'
               state={this.state.actionActive}
               placeholder='xxxx'
               getChange={this.handleChange}
-              action={this.customAccountCode}
+              getSelect={this.handleSelect}
+              action={this.state.action}
+              textContent={this.state.actionText}
             />
             <div style={{ textAlign: "left" }}>
               <Icon name='image outline' size='massive' color='grey' />
@@ -200,7 +267,12 @@ class Register extends Component {
             </div>
           </Form>
           <div style={{ textAlign: "center", marginTop: "10px" }}>
-            <Button size='large' color='violet' content='submit' />
+            <Button
+              size='large'
+              color='violet'
+              onClick={this.confirmAccountCode}
+              content='submit'
+            />
           </div>
         </CardContainer>
       </div>
