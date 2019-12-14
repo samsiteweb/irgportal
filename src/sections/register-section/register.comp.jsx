@@ -70,7 +70,7 @@ class Register extends Component {
     this.state = {
       actionActive: false,
       action: this.getAccountCode,
-      disableBox: false,
+      disableBox: true,
       actionText: "Generate",
       result: "",
       messageState: (
@@ -239,11 +239,12 @@ class Register extends Component {
         Email: this.state.Email,
         Contact: this.state.Contact,
         Address: this.state.Address,
-        Country: this.state.Contry
+        Country: this.state.Country
       })
       .then(res => {
         console.log(res);
-      });
+      })
+      .catch(e => console.log(e));
   }
   render() {
     return (
@@ -293,7 +294,7 @@ class Register extends Component {
             <Button
               size='large'
               color='violet'
-              onClick={this.handleSubmit}
+              onClick={null}
               content='submit'
             />
           </div>

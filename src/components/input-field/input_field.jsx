@@ -8,22 +8,24 @@ const Formfield = ({
   placeholder,
   type,
   id,
-  getChange
+  getChange,
+  getBlurChange,
+  error
 }) => {
   return (
-    <Form.Field>
-      <label> {label} </label>
-      <Input
-        id={id}
-        icon={icon}
-        label={{ icon: "asterisk" }}
-        labelPosition='right corner'
-        iconPosition={iconposition}
-        onChange={getChange}
-        placeholder={placeholder}
-        type={type}
-      />
-    </Form.Field>
+    <Form.Field
+      control={Input}
+      id={id}
+      icon={icon}
+      label={{ icon: "asterisk" }}
+      labelPosition='right corner'
+      iconPosition={iconposition}
+      onChange={getChange}
+      onBlur={getBlurChange}
+      placeholder={placeholder}
+      type={type}
+      error={error}
+    />
   );
 };
 export const ActionInput = React.forwardRef(
