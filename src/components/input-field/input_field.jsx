@@ -40,13 +40,14 @@ export const ActionInput = React.forwardRef(
       getChange,
       getSelect,
       textContent,
-      disabled
+      disabled,
+      disableAll
     },
     ref
   ) => (
     <Form.Field style={{ marginTop: "10px" }}>
-      <Input type='text' placeholder={placeholder}>
-        <input onChange={getChange} id='Code' disabled={disabled} ref={ref} />
+      <Input type='text' placeholder={placeholder} disabled={disableAll}>
+        <input onChange={getChange} id='Code' disabled={!disabled} ref={ref} />
         <Select
           compact
           options={options}

@@ -7,72 +7,40 @@ import Formfield, {
 } from "../../components/input-field/input_field";
 import axios from "axios";
 import MessageLabel from "../../components/message-label/messagelabel";
+const validEmailRegex = RegExp(
+  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+);
 
 const options = [
   { key: "all", text: "Custom Code", value: "custom" },
   { key: "products", text: "Get Code", value: "get" }
 ];
-const formField = [
-  {
-    id: "name",
-    label: "Name",
-    icon: "users",
-    iconposition: "left",
-    placeholder: "organization Name",
-    type: "text"
-  },
-  {
-    id: "Email",
-    label: "Email",
-    icon: "at",
-    iconposition: "left",
-    placeholder: "Organization Email ",
-    type: "email"
-  },
-  {
-    id: "Contact",
-    label: "Contact",
-    icon: "phone",
-    iconposition: "left",
-    placeholder: "Organization Mobile Contact",
-    type: "email"
-  },
-  {
-    id: "Address",
-    label: "Address",
-    icon: "map marker alternate",
-    iconposition: "left",
-    placeholder: "Organisations address",
-    type: "email"
-  },
-  {
-    id: "Country",
-    label: "Country",
-    icon: "map marker alternate",
-    iconposition: "left",
-    placeholder: "Organisation country of residence",
-    type: "email"
-  }
-];
 
 const url = "https://iregisterkids.com/prod_sup/api/NewRegistration";
 class Register extends Component {
   inputRef = createRef();
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
+  constructor() {
+    super();
     this.getAccountCode = this.getAccountCode.bind(this);
     this.customAccountCode = this.customAccountCode.bind(this);
     this.confirmAccountCode = this.confirmAccountCode.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    console.log(props);
 
     this.state = {
       actionActive: false,
+      disableAll: false,
+      disableBox: false,
       action: this.getAccountCode,
-      disableBox: true,
       actionText: "Generate",
       result: "",
+      validators: {
+        Name: false,
+        Email: false,
+        Contact: false,
+        Address: false,
+        Country: false
+      },
+      formvalid: "",
       messageState: (
         <MessageLabel
           pointing='below'
@@ -84,42 +52,99 @@ class Register extends Component {
       )
     };
   }
-  handleChange(e) {
-    console.log(e.target.id);
-    let name = e.target.id;
-    let value = e.target.value;
-    this.setState({ [name]: value }, () => {
-      console.log(this.state);
+
+  handleChange = e => {
+    const { id, value } = e.target;
+
+    let validators = this.state.validators;
+    switch (id) {
+      case "Name":
+        validators.Name =
+          value.length < 5
+            ? {
+                content:
+                  "Organization name cannot be less than 5 characters long !",
+                pointing: "below"
+              }
+            : null;
+        break;
+      case "Email":
+        validators.Email = validEmailRegex.test(value)
+          ? null
+          : {
+              content: "Email is not valid",
+              pointing: "below"
+            };
+        break;
+      case "Contact":
+        validators.Contact =
+          value.length < 7
+            ? {
+                content: "Organization contact cannot be less than 7 digits !",
+                pointing: "below"
+              }
+            : null;
+        break;
+      case "Address":
+        validators.Address =
+          value.length < 10
+            ? {
+                content: "Address must not be less than 10 characters long !",
+                pointing: "below"
+              }
+            : null;
+        break;
+      case "Country":
+        validators.Country =
+          value.length < 2
+            ? {
+                content: "Country of Origin cannot be empty !",
+                pointing: "below"
+              }
+            : null;
+        break;
+      case "Code":
+        var start = e.target.selectionStart;
+        var end = e.target.selectionEnd;
+        e.target.value = e.target.value.toUpperCase();
+        e.target.setSelectionRange(start, end);
+        break;
+
+      default:
+        break;
+    }
+    this.setState({ validators, [id]: value }, () => {
+      console.log(this.state, "this is my state");
     });
-  }
+  };
+
   handleSelect = e => {
-    console.log(e.target.textContent);
     if (e.target.textContent === "Get Code") {
       this.setState({
         action: this.getAccountCode,
         actionText: "Generate",
-        disableBox: true
+        disableBox: false
       });
     } else if (e.target.textContent === "Custom Code") {
       this.setState({
         action: this.customAccountCode,
         actionText: "Verify",
-        disableBox: false
+        disableBox: true
       });
     }
+    console.log(this.state);
   };
   async confirmAccountCode() {
+    const id = this.state.result;
+    const code = this.state.Code;
     await axios
-      .get(url, {
-        params: {
-          code: this.state.Code,
-          id: this.state.result
-        }
-      })
+      .put(`${url}?code=${code}&id=${id}`)
       .then(response => {
         console.log(response.data);
         this.setState({
-          disableBox: true,
+          actionActive: true,
+          disableBox: false,
+          disableAll: true,
           messageState: (
             <MessageLabel
               color='green'
@@ -131,16 +156,24 @@ class Register extends Component {
       })
       .catch(e => {
         this.setState({
+          actionActive: true,
           messageState: (
             <MessageLabel
               pointing='below'
               color='green'
               icon='mail'
-              message={`Wrong Code was passed. Please check your email for the right code`}
+              message={
+                e.response
+                  ? `${e.response.data.Message}`
+                  : "Please check your internet connection"
+              }
             />
           )
         });
       });
+    this.setState({
+      actionActive: false
+    });
   }
   async customAccountCode() {
     await axios
@@ -152,7 +185,8 @@ class Register extends Component {
       .then(response => {
         console.log(response.data);
         this.setState({
-          disableBox: true,
+          disableBox: false,
+          disableAll: true,
           messageState: (
             <MessageLabel
               color='green'
@@ -169,7 +203,11 @@ class Register extends Component {
               pointing='below'
               color='red'
               icon='mail'
-              message={`${e}`}
+              message={
+                e.response
+                  ? `${e.response.data.Message}`
+                  : "Please check your internet connection"
+              }
             />
           )
         });
@@ -198,7 +236,6 @@ class Register extends Component {
       })
       .then(response => {
         console.log(response.data.Result);
-
         this.setState({
           actionActive: !this.state.actionActive,
           messageState: (
@@ -212,11 +249,11 @@ class Register extends Component {
           result: response.data.Result,
           action: this.confirmAccountCode,
           actionText: "Confirm Code",
-          disableBox: false
+          disableBox: true
         });
         this.inputRef.current.focus();
       })
-      .catch(error => {
+      .catch(e => {
         this.setState({
           actionActive: !this.state.actionActive,
           messageState: (
@@ -224,29 +261,46 @@ class Register extends Component {
               pointing='below'
               color='red'
               icon='mail'
-              message={`${error}`}
+              message={
+                e.response
+                  ? `${e.response.data.Message}`
+                  : "Please check your internet connection"
+              }
             />
           )
         });
       });
   }
 
-  async handleSubmit() {
-    await axios
-      .post(url, {
-        AccountCode: this.state.Code,
-        Name: this.state.name,
-        Email: this.state.Email,
-        Contact: this.state.Contact,
-        Address: this.state.Address,
-        Country: this.state.Country
-      })
-      .then(res => {
-        console.log(res);
-      })
-      .catch(e => console.log(e));
+  validateForm = validators => {
+    let valid = true;
+
+    Object.values(validators).forEach(validator => {
+      validator === null ? (valid = true) : (valid = false);
+    });
+    return valid;
+  };
+  handleSubmit() {
+    if (this.validateForm(this.state.validators) && this.state.disableAll) {
+      console.log("form is valid"); // await axios
+      //   .post(url, {
+      //     AccountCode: this.state.Code,
+      //     Name: this.state.Name,
+      //     Email: this.state.Email,
+      //     Contact: this.state.Contact,
+      //     Address: this.state.Address,
+      //     Country: this.state.Country
+      //   })
+      //   .then(res => {
+      //     console.log(res);
+      //   })
+      //   .catch(e => console.log(e));
+    } else {
+      console.log("invalid form submitted");
+    }
   }
   render() {
+    const { Name, Email, Contact, Address, Country } = this.state.validators;
     return (
       <div>
         <CardContainer
@@ -254,22 +308,57 @@ class Register extends Component {
           description='Please enter correct details of Organization'
         >
           <Form style={{ paddingTop: 20 }}>
-            {formField.map(
-              ({ id, label, icon, iconposition, placeholder, type, key }) => {
-                return (
-                  <Formfield
-                    key={id}
-                    id={id}
-                    label={label}
-                    icon={icon}
-                    iconposition={iconposition}
-                    placeholder={placeholder}
-                    type={type}
-                    getChange={this.handleChange}
-                  />
-                );
-              }
-            )}
+            <Formfield
+              id={"Name"}
+              label='Name'
+              icon='users'
+              iconposition='left'
+              placeholder='organization Name'
+              type='text'
+              getChange={this.handleChange}
+              error={Name}
+            />
+            <Formfield
+              id='Email'
+              label='Email'
+              icon='at'
+              iconposition='left'
+              placeholder='Organization Email'
+              type='email'
+              getChange={this.handleChange}
+              error={Email}
+            />
+            <Formfield
+              id='Contact'
+              label='Contact'
+              icon='phone'
+              iconposition='left'
+              placeholder='Organization Mobile Contact'
+              type='number'
+              getChange={this.handleChange}
+              error={Contact}
+            />
+            <Formfield
+              id='Address'
+              label='Address'
+              icon='map signs'
+              iconposition='left'
+              placeholder='Organisations address'
+              type='text'
+              getChange={this.handleChange}
+              error={Address}
+            />
+            <Formfield
+              id='Country'
+              label='Country'
+              icon='map'
+              iconposition='left'
+              placeholder='Organisation country of residence'
+              type='email'
+              getChange={this.handleChange}
+              error={Country}
+            />
+
             {this.state.messageState}
 
             <ActionInput
@@ -284,6 +373,7 @@ class Register extends Component {
               action={this.state.action}
               textContent={this.state.actionText}
               ref={this.inputRef}
+              disableAll={this.state.disableAll}
             />
             <div style={{ textAlign: "left" }}>
               <Icon name='image outline' size='massive' color='grey' />
@@ -294,8 +384,8 @@ class Register extends Component {
             <Button
               size='large'
               color='violet'
-              onClick={null}
-              content='submit'
+              onClick={this.handleSubmit}
+              content='Submit'
             />
           </div>
         </CardContainer>

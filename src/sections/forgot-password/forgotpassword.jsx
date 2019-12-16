@@ -9,15 +9,15 @@ const validEmailRegex = RegExp(
 );
 
 class ForgotPassword extends Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       email: "",
-      showMessage: false,
       message: "",
+      showMessage: false,
+      emailValid: false,
       loading: false,
-      errors: {},
-      emailValid: false
+      errors: {}
     };
     this.retrivePassword = this.retrivePassword.bind(this);
   }
@@ -66,9 +66,10 @@ class ForgotPassword extends Component {
       });
   }
   handleSend = () => {
-    console.log(this.state.email, "email");
     if (this.state.emailValid) {
       this.retrivePassword();
+    } else {
+      this.handleBlurChange();
     }
   };
 
@@ -97,6 +98,7 @@ class ForgotPassword extends Component {
       errors
     }));
   };
+
   render() {
     const { email } = this.state.errors;
     return (
