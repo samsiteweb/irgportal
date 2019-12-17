@@ -7,9 +7,10 @@ import Formfield, {
 } from "../../components/input-field/input_field";
 import axios from "axios";
 import MessageLabel from "../../components/message-label/messagelabel";
-const validEmailRegex = RegExp(
-  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-);
+import validatorFunction, {
+  validateForm,
+  InputToUpperCase
+} from "../../lib/validatorLib";
 
 const options = [
   { key: "all", text: "Custom Code", value: "custom" },
@@ -25,7 +26,6 @@ class Register extends Component {
     this.customAccountCode = this.customAccountCode.bind(this);
     this.confirmAccountCode = this.confirmAccountCode.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
     this.state = {
       actionActive: false,
       disableAll: false,
@@ -52,70 +52,23 @@ class Register extends Component {
       )
     };
   }
-
   handleChange = e => {
     const { id, value } = e.target;
-
     let validators = this.state.validators;
-    switch (id) {
-      case "Name":
-        validators.Name =
-          value.length < 5
-            ? {
-                content:
-                  "Organization name cannot be less than 5 characters long !",
-                pointing: "below"
-              }
-            : null;
-        break;
-      case "Email":
-        validators.Email = validEmailRegex.test(value)
-          ? null
-          : {
-              content: "Email is not valid",
-              pointing: "below"
-            };
-        break;
-      case "Contact":
-        validators.Contact =
-          value.length < 7
-            ? {
-                content: "Organization contact cannot be less than 7 digits !",
-                pointing: "below"
-              }
-            : null;
-        break;
-      case "Address":
-        validators.Address =
-          value.length < 10
-            ? {
-                content: "Address must not be less than 10 characters long !",
-                pointing: "below"
-              }
-            : null;
-        break;
-      case "Country":
-        validators.Country =
-          value.length < 2
-            ? {
-                content: "Country of Origin cannot be empty !",
-                pointing: "below"
-              }
-            : null;
-        break;
-      case "Code":
-        var start = e.target.selectionStart;
-        var end = e.target.selectionEnd;
-        e.target.value = e.target.value.toUpperCase();
-        e.target.setSelectionRange(start, end);
-        break;
 
-      default:
-        break;
+    validatorFunction(id, value, validators);
+    if (id === "Code") {
+      InputToUpperCase(e).then(value => {
+        this.setState({ validators, [id]: value }, () => {
+          console.log(this.state, "this is my state");
+        });
+      });
+    } else {
+      this.setState({ validators, [id]: value }, () => {
+        console.log(this.state, "this is my state");
+      });
     }
-    this.setState({ validators, [id]: value }, () => {
-      console.log(this.state, "this is my state");
-    });
+    console.log(this.state);
   };
 
   handleSelect = e => {
@@ -272,16 +225,8 @@ class Register extends Component {
       });
   }
 
-  validateForm = validators => {
-    let valid = true;
-
-    Object.values(validators).forEach(validator => {
-      validator === null ? (valid = true) : (valid = false);
-    });
-    return valid;
-  };
   handleSubmit() {
-    if (this.validateForm(this.state.validators) && this.state.disableAll) {
+    if (validateForm(this.state.validators) && this.state.disableAll) {
       console.log("form is valid"); // await axios
       //   .post(url, {
       //     AccountCode: this.state.Code,
@@ -302,94 +247,92 @@ class Register extends Component {
   render() {
     const { Name, Email, Contact, Address, Country } = this.state.validators;
     return (
-      <div>
-        <CardContainer
-          header='Registration Form '
-          description='Please enter correct details of Organization'
-        >
-          <Form style={{ paddingTop: 20 }}>
-            <Formfield
-              id={"Name"}
-              label='Name'
-              icon='users'
-              iconposition='left'
-              placeholder='organization Name'
-              type='text'
-              getChange={this.handleChange}
-              error={Name}
-            />
-            <Formfield
-              id='Email'
-              label='Email'
-              icon='at'
-              iconposition='left'
-              placeholder='Organization Email'
-              type='email'
-              getChange={this.handleChange}
-              error={Email}
-            />
-            <Formfield
-              id='Contact'
-              label='Contact'
-              icon='phone'
-              iconposition='left'
-              placeholder='Organization Mobile Contact'
-              type='number'
-              getChange={this.handleChange}
-              error={Contact}
-            />
-            <Formfield
-              id='Address'
-              label='Address'
-              icon='map signs'
-              iconposition='left'
-              placeholder='Organisations address'
-              type='text'
-              getChange={this.handleChange}
-              error={Address}
-            />
-            <Formfield
-              id='Country'
-              label='Country'
-              icon='map'
-              iconposition='left'
-              placeholder='Organisation country of residence'
-              type='email'
-              getChange={this.handleChange}
-              error={Country}
-            />
+      <CardContainer
+        header='Registration Form '
+        description='Please enter correct details of Organization'
+      >
+        <Form style={{ paddingTop: 20 }}>
+          <Formfield
+            id={"Name"}
+            label='Name'
+            icon='users'
+            iconposition='left'
+            placeholder='organization Name'
+            type='text'
+            getChange={this.handleChange}
+            error={Name}
+          />
+          <Formfield
+            id='Email'
+            label='Email'
+            icon='at'
+            iconposition='left'
+            placeholder='Organization Email'
+            type='email'
+            getChange={this.handleChange}
+            error={Email}
+          />
+          <Formfield
+            id='Contact'
+            label='Contact'
+            icon='phone'
+            iconposition='left'
+            placeholder='Organization Mobile Contact'
+            type='number'
+            getChange={this.handleChange}
+            error={Contact}
+          />
+          <Formfield
+            id='Address'
+            label='Address'
+            icon='map signs'
+            iconposition='left'
+            placeholder='Organisations address'
+            type='text'
+            getChange={this.handleChange}
+            error={Address}
+          />
+          <Formfield
+            id='Country'
+            label='Country'
+            icon='map'
+            iconposition='left'
+            placeholder='Organisation country of residence'
+            type='email'
+            getChange={this.handleChange}
+            error={Country}
+          />
 
-            {this.state.messageState}
+          {this.state.messageState}
 
-            <ActionInput
-              options={options}
-              defaultValue='get'
-              color='violet'
-              state={this.state.actionActive}
-              placeholder='xxxx'
-              disabled={this.state.disableBox}
-              getChange={this.handleChange}
-              getSelect={this.handleSelect}
-              action={this.state.action}
-              textContent={this.state.actionText}
-              ref={this.inputRef}
-              disableAll={this.state.disableAll}
-            />
-            <div style={{ textAlign: "left" }}>
-              <Icon name='image outline' size='massive' color='grey' />
-              <Button size='mini' content='Upload Logo' />
-            </div>
-          </Form>
-          <div style={{ textAlign: "center", marginTop: "10px" }}>
-            <Button
-              size='large'
-              color='violet'
-              onClick={this.handleSubmit}
-              content='Submit'
-            />
+          <ActionInput
+            options={options}
+            defaultValue='get'
+            color='violet'
+            state={this.state.actionActive}
+            placeholder='xxxx'
+            disabled={this.state.disableBox}
+            getChange={this.handleChange}
+            getSelect={this.handleSelect}
+            action={this.state.action}
+            textContent={this.state.actionText}
+            ref={this.inputRef}
+            disableAll={this.state.disableAll}
+          />
+          <div style={{ textAlign: "left" }}>
+            <Icon name='image outline' size='massive' color='grey' />
+            <Button size='mini' content='Upload Logo' />
           </div>
-        </CardContainer>
-      </div>
+        </Form>
+        <div style={{ textAlign: "center", marginTop: "10px" }}>
+          <Button
+            size='large'
+            color='violet'
+            onClick={this.handleSubmit}
+            content='Submit'
+          />
+        </div>
+      </CardContainer>
     );
   }
 }

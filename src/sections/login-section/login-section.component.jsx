@@ -6,9 +6,9 @@ import CardContainer from "../../components/card-container/card_container";
 export const DecisionBtn = ({ firstChoice, secondChoice, size, push }) => {
   return (
     <Button.Group style={{ paddingTop: 20 }} size={size}>
-      <Button onClick={() => push("./register")}>{firstChoice}</Button>
+      <Button onClick={() => push("/register")}>{firstChoice}</Button>
       <Button.Or />
-      <Button onClick={() => push("updateAccount")}> {secondChoice} </Button>
+      <Button onClick={() => push("/adminReg")}> {secondChoice} </Button>
     </Button.Group>
   );
 };
@@ -56,7 +56,6 @@ class Login extends Component {
               );
             }
           )}
-          
         </Form>
 
         <div style={{ paddingTop: 20, textAlign: "center" }}>

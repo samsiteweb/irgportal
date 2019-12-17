@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import AccountUpdate from "./sections/update-account/accupdate";
 import ForgotPassword from "./sections/forgot-password/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
+import RegisterAdmin from "./sections/admin-reg/reg-admin";
 
 const Footer = () => {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path='/updateAccount' component={AccountUpdate} />
             <Route path='/forgotPass' component={ForgotPassword} />
             <Route path='/passReset' component={ResetPassword} />
+            <Route path='/adminReg' component={RegisterAdmin} />
           </Switch>
         </Router>
       </div>

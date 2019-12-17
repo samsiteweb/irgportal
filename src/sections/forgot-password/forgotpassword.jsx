@@ -4,9 +4,7 @@ import Formfield from "../../components/input-field/input_field";
 import { Form, Button } from "semantic-ui-react";
 import MessageLabel from "../../components/message-label/messagelabel";
 import axios from "axios";
-const validEmailRegex = RegExp(
-  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
-);
+import { validEmailRegex } from "../../lib/validatorLib";
 
 class ForgotPassword extends Component {
   constructor() {
