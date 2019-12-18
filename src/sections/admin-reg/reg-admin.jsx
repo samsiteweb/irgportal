@@ -1,8 +1,9 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import CardContainer from "../../components/card-container/card_container";
 import {
   Placeholder,
   Card,
+  Grid,
   Item,
   Input,
   Image,
@@ -24,14 +25,18 @@ class RegisterAdmin extends Component {
     this.state = {
       accountActions: {
         accountCode: "",
-        codeValid: false
+        codeValid: false,
+        confirm: false
       },
       buttonActions: {
         resolved: false,
-        content: "Enter",
+        loadContent: false,
+        content: "Verify",
         disabled: false,
         icon: "key",
-        color: "teal"
+        color: "teal",
+        confirmBtn: true,
+        rejectBtn: true
       },
       validators: {
         FirstName: false,
@@ -41,6 +46,7 @@ class RegisterAdmin extends Component {
         Username: false,
         Password: false
       },
+      data: false,
       formValid: ""
     };
   }
@@ -62,7 +68,8 @@ class RegisterAdmin extends Component {
       ...this.state,
       buttonActions: {
         ...this.state.buttonActions,
-        resolved: true
+        resolved: true,
+        loadContent: true
       }
     }));
     axios
@@ -72,8 +79,9 @@ class RegisterAdmin extends Component {
         }
       })
       .then(res => {
-        console.log(res.data);
+        console.log(res.data.Info);
         this.setState(prev => ({
+          data: res.data.Info,
           accountActions: {
             ...this.state.accountActions,
             codeValid: true
@@ -84,7 +92,9 @@ class RegisterAdmin extends Component {
             disabled: true,
             content: "valid",
             icon: "checkmark",
-            color: "green"
+            color: "green",
+            confirmBtn: false,
+            rejectBtn: false
           }
         }));
       })
@@ -99,8 +109,39 @@ class RegisterAdmin extends Component {
             content: "Try Again"
           }
         }));
-        console.log(err.response.data.Message);
+        // console.log(err.response.data.Message);
       });
+  };
+  confirmDetail = () => {
+    this.setState(() => ({
+      accountActions: {
+        ...this.state.accountActions,
+        confirm: true
+      },
+      buttonActions: {
+        ...this.state.buttonActions,
+        confirmBtn: true
+      }
+    }));
+  };
+  handleReject = () => {
+    this.setState(() => ({
+      accountActions: {
+        ...this.state.accountActions,
+        confirm: false
+      },
+      buttonActions: {
+        ...this.state.buttonActions,
+        // loadContent: false
+        confirmBtn: true,
+        rejectBtn: true,
+        disabled: false,
+        content: "Verify",
+        icon: "key",
+        color: "teal"
+      },
+      data: false
+    }));
   };
   handleChange = e => {
     e.preventDefault();
@@ -120,7 +161,7 @@ class RegisterAdmin extends Component {
   };
 
   render() {
-    const { accountActions, buttonActions } = this.state;
+    const { data, accountActions, buttonActions } = this.state;
     return (
       <CardContainer
         header='Admin Registration'
@@ -139,89 +180,87 @@ class RegisterAdmin extends Component {
             disabled={buttonActions.disabled}
             onChange={this.handleChange}
             placeholder='Enter Account Code'
+            focus={!buttonActions.disabled}
           />
         </div>
-        {buttonActions.resolved ? (
-          <Card>
-            <Card.Content>
-              {buttonActions.resolved ? (
-                <Placeholder>
-                  <Placeholder.Image square />
-                </Placeholder>
-              ) : (
-                <Image
-                  floated='right'
-                  size='mini'
-                  src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'
-                />
-              )}
-              {buttonActions.resolved ? (
-                <Placeholder>
-                  <Placeholder.Header>
-                    <Placeholder.Line length='medium' />
-                    <Placeholder.Line length='medium' />
-                  </Placeholder.Header>
-                </Placeholder>
-              ) : accountActions.codeValid ? (
-                <Fragment>
-                  <Card.Header>Steve Sanders</Card.Header>
-                  <Card.Meta>Friends of Elliot</Card.Meta>
-                </Fragment>
-              ) : null}
-              {buttonActions.resolved ? (
-                <Placeholder>
-                  <Placeholder.Paragraph>
-                    <Placeholder.Line length='long' />
-                    <Placeholder.Line length='long' />
-                    <Placeholder.Line length='long' />
-                  </Placeholder.Paragraph>
-                </Placeholder>
-              ) : accountActions.codeValid ? (
-                <Fragment>
-                  <Card.Description>
-                    Steve wants to add you to the group{" "}
-                    <strong>best friends</strong>
-                  </Card.Description>
-                </Fragment>
-              ) : null}
-            </Card.Content>
-            <Card.Content extra>
-              <div className='ui two buttons'>
-                <Button basic color='green'>
-                  Approve
-                </Button>
-                <Button basic color='red'>
-                  Decline
-                </Button>
-              </div>
-            </Card.Content>
-          </Card>
-        ) : null}
-        {/* {accountActions.codeValid ? (
-          <Item.Group>
-            <Item>
-              <Item.Image
-                size='small'
-                src='https://react.semantic-ui.com/images/wireframe/image.png'
-              />
-
-              <Item.Content>
-                <Item.Header as='a'>Header</Item.Header>
-                <Item.Meta>Description</Item.Meta>
-                <Item.Description>
-                  <Image src='https://react.semantic-ui.com/images/wireframe/short-paragraph.png' />
-                </Item.Description>
-                <Item.Extra>Additional Details</Item.Extra>
-              </Item.Content>
-            </Item>
-          </Item.Group>
-        ) : null} */}
-        {/* {accountActions.codeValid ? (
+        {buttonActions.loadContent ? (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "10px"
+            }}
+          >
+            <Card
+              fluid
+              style={{
+                marginLeft: "20px",
+                marginRight: "20px",
+                padding: "10px"
+              }}
+            >
+              <Grid>
+                <Grid.Row>
+                  <Grid.Column width='4'>
+                    {data ? (
+                      <Image
+                        // floated='left'
+                        size='small'
+                        src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'
+                      />
+                    ) : (
+                      <Placeholder style={{ height: 80, width: 80 }}>
+                        <Placeholder.Image />
+                      </Placeholder>
+                    )}
+                  </Grid.Column>
+                  <Grid.Column width='12'>
+                    {data ? (
+                      <div>
+                        <Card.Header>{data.AccountCode}</Card.Header>
+                        <Card.Meta>
+                          <span> {data.Email}</span>
+                        </Card.Meta>
+                      </div>
+                    ) : (
+                      <Placeholder>
+                        <Placeholder.Line length='long' />
+                        <Placeholder.Line length='very long' />
+                      </Placeholder>
+                    )}
+                    <div style={{ paddingTop: "2px" }}>
+                      <Button
+                        content='Confirm'
+                        disabled={buttonActions.confirmBtn ? true : false}
+                        size='mini'
+                        color='teal'
+                        onClick={this.confirmDetail}
+                      />
+                      <Button
+                        content='Reject'
+                        disabled={buttonActions.rejectBtn ? true : false}
+                        size='mini'
+                        color='orange'
+                        onClick={this.handleReject}
+                      />
+                    </div>
+                  </Grid.Column>
+                </Grid.Row>
+              </Grid>
+            </Card>
+          </div>
+        ) : (
+          false
+        )}
+        {accountActions.confirm ? (
           <AdminForm
             state={this.state.validators}
             handleChange={this.handleFormChange}
+            handleSubmit={this.handleSubmit}
           />
-        ) : null} */}
+        ) : (
+          false
+        )}
       </CardContainer>
     );
   }
