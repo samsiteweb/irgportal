@@ -2,7 +2,7 @@ export const validEmailRegex = RegExp(
   /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
 );
 
-const validatorFunction = (id, value, validators) => {
+const validatorFunction = (id, value, validators, password) => {
   switch (id) {
     case "Name":
       validators.Name =
@@ -10,6 +10,15 @@ const validatorFunction = (id, value, validators) => {
           ? {
               content:
                 "Organization name cannot be less than 5 characters long !",
+              pointing: "below"
+            }
+          : null;
+      break;
+    case "Credentials":
+      validators.Credentials =
+        value.length < 5
+          ? {
+              content: "characters cannot be less than 5sam !",
               pointing: "below"
             }
           : null;
@@ -85,6 +94,15 @@ const validatorFunction = (id, value, validators) => {
             }
           : null;
       break;
+    case "ConfirmPassword":
+      validators.ConfirmPassword =
+        password !== value
+          ? {
+              content: "Password did not match !",
+              pointing: "below"
+            }
+          : null;
+      break;
     default:
       break;
   }
@@ -105,6 +123,7 @@ export const validateForm = validators => {
   let valid = true;
 
   Object.values(validators).forEach(validator => {
+    console.log(validator);
     validator === null ? (valid = true) : (valid = false);
   });
   return valid;

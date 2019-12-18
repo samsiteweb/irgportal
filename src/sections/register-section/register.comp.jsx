@@ -55,7 +55,6 @@ class Register extends Component {
   handleChange = e => {
     const { id, value } = e.target;
     let validators = this.state.validators;
-
     validatorFunction(id, value, validators);
     if (id === "Code") {
       InputToUpperCase(e).then(value => {
@@ -227,19 +226,20 @@ class Register extends Component {
 
   handleSubmit() {
     if (validateForm(this.state.validators) && this.state.disableAll) {
-      console.log("form is valid"); // await axios
-      //   .post(url, {
-      //     AccountCode: this.state.Code,
-      //     Name: this.state.Name,
-      //     Email: this.state.Email,
-      //     Contact: this.state.Contact,
-      //     Address: this.state.Address,
-      //     Country: this.state.Country
-      //   })
-      //   .then(res => {
-      //     console.log(res);
-      //   })
-      //   .catch(e => console.log(e));
+      console.log("form is valid");
+      axios
+        .post(url, {
+          AccountCode: this.state.Code,
+          Name: this.state.Name,
+          Email: this.state.Email,
+          Contact: this.state.Contact,
+          Address: this.state.Address,
+          Country: this.state.Country
+        })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(e => console.log(e));
     } else {
       console.log("invalid form submitted");
     }

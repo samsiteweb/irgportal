@@ -1,10 +1,10 @@
 import React, { Component } from "react";
 import CardContainer from "../../components/card-container/card_container";
+import MessageLabel from "../../components/message-label/messagelabel";
 import {
   Placeholder,
   Card,
   Grid,
-  Item,
   Input,
   Image,
   Button
@@ -17,10 +17,11 @@ import validatorFunction, {
 import axios from "axios";
 import UrlLib from "../../lib/urlLib";
 import AdminForm from "./adminform";
+import CompletedMessage from "./completedMessage";
 
 class RegisterAdmin extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
 
     this.state = {
       accountActions: {
@@ -44,24 +45,117 @@ class RegisterAdmin extends Component {
         Email: false,
         Contact: false,
         Username: false,
-        Password: false
+        Password: false,
+        ConfirmPassword: false
+      },
+      message: {
+        show: false,
+        messageText: "",
+        messageColor: ""
       },
       data: false,
-      formValid: ""
+      dataToken: false,
+      formSubmitted: false,
+      formValid: false,
+      loadSubmitBtn: false
     };
   }
 
   handleFormChange = e => {
     const { id, value } = e.target;
     let validators = this.state.validators;
-    validatorFunction(id, value, validators);
+    validatorFunction(id, value, validators, this.state.Password);
     this.setState({ validators, [id]: value }, () => {
       console.log(this.state, "my form state");
     });
   };
   handleSubmit = () => {
-    if (validateForm(this.state.validators)) console.log("form is valid");
-    else console.log("form is invalid");
+    this.setState(() => ({
+      ...this.state,
+      loadSubmitBtn: true
+    }));
+    if (validateForm(this.state.validators) === true) {
+      const {
+        FirstName,
+        LastName,
+        Email,
+        Contact,
+        Username,
+        Password
+      } = this.state;
+      const { dataToken } = this.state;
+      axios
+        .post(
+          `${UrlLib}/ContinueRegistration`,
+          {
+            FirstName: FirstName,
+            LastName: LastName,
+            Email: Email,
+            Contact: Contact,
+            Username: Username,
+            Password: Password
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${dataToken.Token}`
+            }
+          }
+        )
+        .then(res => {
+          console.log(res);
+          this.setState(() => ({
+            ...this.state,
+            buttonActions: {
+              ...this.state.buttonActions,
+              loadContent: false
+            },
+            accountActions: {
+              ...this.state.accountActions,
+              confirm: false
+            },
+            formSubmitted: true,
+            loadSubmitBtn: false
+          }));
+        })
+        .catch(e => {
+          this.setState({
+            message: {
+              show: true,
+              color: "orange",
+              messageText: e.response
+                ? e.response.data.Message
+                : "Please check internet connection"
+            }
+          });
+          setTimeout(() => {
+            this.setState(prevState => ({
+              ...prevState,
+              message: {
+                show: false
+              },
+              loadSubmitBtn: false
+            }));
+          }, 3000);
+        });
+    } else {
+      this.setState({
+        message: {
+          show: true,
+          color: "orange",
+          messageText:
+            " Your attempt to submit an invalid form failed !!! Please complete the form properly"
+        }
+      });
+      setTimeout(() => {
+        this.setState(prevState => ({
+          ...prevState,
+          message: {
+            show: false
+          },
+          loadSubmitBtn: false
+        }));
+      }, 3000);
+    }
   };
   verifyAccountCode = () => {
     this.setState(() => ({
@@ -79,9 +173,10 @@ class RegisterAdmin extends Component {
         }
       })
       .then(res => {
-        console.log(res.data.Info);
+        console.log(res.data);
         this.setState(prev => ({
           data: res.data.Info,
+          dataToken: res.data.Token,
           accountActions: {
             ...this.state.accountActions,
             codeValid: true
@@ -161,7 +256,14 @@ class RegisterAdmin extends Component {
   };
 
   render() {
-    const { data, accountActions, buttonActions } = this.state;
+    const {
+      loadSubmitBtn,
+      message,
+      data,
+      formSubmitted,
+      accountActions,
+      buttonActions
+    } = this.state;
     return (
       <CardContainer
         header='Admin Registration'
@@ -252,18 +354,37 @@ class RegisterAdmin extends Component {
         ) : (
           false
         )}
+        {message.show ? (
+          <MessageLabel
+            color={message.color}
+            icon='cancel'
+            message={message.messageText}
+          />
+        ) : null}
+
         {accountActions.confirm ? (
           <AdminForm
             state={this.state.validators}
             handleChange={this.handleFormChange}
             handleSubmit={this.handleSubmit}
+            resolve={loadSubmitBtn}
           />
+        ) : (
+          false
+        )}
+        {formSubmitted ? (
+          <CompletedMessage handlepush={this.handlepush} />
         ) : (
           false
         )}
       </CardContainer>
     );
   }
+
+  handlepush = () => {
+    console.log("i just clicked ");
+    this.props.history.push("/");
+  };
 }
 
 export default RegisterAdmin;

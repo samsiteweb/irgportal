@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import { Form, Button } from "semantic-ui-react";
 import Formfield from "../../components/input-field/input_field";
 import CardContainer from "../../components/card-container/card_container";
+import validatorFunction from "../../lib/validatorLib";
+import axios from "axios";
+import UrlLib from "../../lib/urlLib";
+import MessageLabel from "../../components/message-label/messagelabel";
 
 export const DecisionBtn = ({ firstChoice, secondChoice, size, push }) => {
   return (
@@ -14,62 +18,118 @@ export const DecisionBtn = ({ firstChoice, secondChoice, size, push }) => {
 };
 
 class Login extends Component {
-  formField = [
-    {
-      label: "Credentials",
-      icon: "user",
-      iconposition: "left",
-      placeholder: "Please enter credentials",
-      type: "text"
-    },
-    {
-      label: "Password",
-      icon: "key",
-      iconposition: "left",
-      placeholder: "Please enter Password",
-      type: "text"
-    }
-  ];
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      loading: false,
+      Credentials: "",
+      Password: "",
+      validators: {
+        Credentials: false,
+        Password: false
+      },
+      message: {
+        show: false,
+        message: ""
+      }
+    };
   }
 
+  handleChange = e => {
+    const { id, value } = e.target;
+    // let validators = this.state.validators;
+    // validatorFunction(id, value, validators);
+
+    this.setState({ [id]: value }, () => {
+      console.log(this.state);
+    });
+  };
+  handleSubmit = () => {
+    this.setState({
+      loading: true
+    });
+    const { Credentials, Password } = this.state;
+    axios
+      .post(`${UrlLib}/Authenticate`, {
+        Credentials: Credentials,
+        Password: Password
+      })
+      .then(res => {
+        console.log(res);
+        this.setState({
+          loading: false
+        });
+      })
+      .catch(e => {
+        this.setState({
+          loading: false,
+          message: {
+            show: true,
+            message: e.response
+              ? e.response.data.Message
+              : "Please Check your Internet Connection"
+          }
+        });
+        setTimeout(() => {
+          this.setState({
+            message: {
+              show: false
+            }
+          });
+        }, 3000);
+      });
+  };
+
   render() {
+    const { validators, loading, message } = this.state;
     return (
       <CardContainer
         header='iRegisterKids Portal Login'
         description='Please Enter your Credentials to Login'
       >
+        {message.show ? (
+          <MessageLabel
+            icon='cancel'
+            color='orange'
+            message={message.message}
+          />
+        ) : null}
         <Form style={{ paddingTop: 20 }}>
-          {this.formField.map(
-            ({ label, icon, iconposition, placeholder, type }) => {
-              return (
-                <Formfield
-                  key={label}
-                  label={label}
-                  icon={icon}
-                  iconposition={iconposition}
-                  placeholder={placeholder}
-                  type={type}
-                />
-              );
-            }
-          )}
+          <Formfield
+            id='Credentials'
+            label='Credentials'
+            icon='user'
+            iconposition='left'
+            placeholder='Please enter credentials'
+            type='text'
+            getChange={this.handleChange}
+            error={validators.Credentials}
+          />
+          <Formfield
+            id='Password'
+            label='Password'
+            icon='key'
+            iconposition='left'
+            placeholder='Please enter Password'
+            type='text'
+            getChange={this.handleChange}
+            error={validators.Password}
+          />
         </Form>
 
         <div style={{ paddingTop: 20, textAlign: "center" }}>
           <Button
-            loading={false}
             size='huge'
             fluid
             color='violet'
             content='Login'
+            onClick={this.handleSubmit}
+            loading={loading}
           />
 
           <DecisionBtn
             firstChoice='Create Account'
-            secondChoice='Update Account'
+            secondChoice='Create Admin'
             size='small'
             push={this.props.history.push}
           />

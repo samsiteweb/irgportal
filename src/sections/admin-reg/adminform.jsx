@@ -2,8 +2,7 @@ import React from "react";
 import { Form, Button, Input } from "semantic-ui-react";
 import Formfield from "../../components/input-field/input_field";
 
-const AdminForm = ({ state, handleChange }) => {
-  // const {FirstName, LastName, Email, Contact, Username,Password, handleChange, handleSubmit} = props
+const AdminForm = ({ state, handleChange, handleSubmit, resolve }) => {
   console.log(state);
   return (
     <Form style={{ paddingTop: 20 }}>
@@ -43,7 +42,7 @@ const AdminForm = ({ state, handleChange }) => {
         icon='phone'
         iconposition='left'
         placeholder='Enter admin mobile number'
-        type='email'
+        type='number'
         getChange={handleChange}
         error={state.Contact}
       />
@@ -73,15 +72,16 @@ const AdminForm = ({ state, handleChange }) => {
         iconposition='left'
         placeholder='Confirm Password '
         type='password'
-        //   getChange={handleChange}
-        error={false}
+        getChange={handleChange}
+        error={state.ConfirmPassword}
       />
       <div style={{ textAlign: "center", marginTop: "10px" }}>
         <Button
           size='large'
           color='violet'
-          // onClick={handleSubmit}
+          onClick={handleSubmit}
           content='Register'
+          loading={resolve}
         />
       </div>
     </Form>
