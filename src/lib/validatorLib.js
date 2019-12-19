@@ -85,6 +85,15 @@ const validatorFunction = (id, value, validators, password) => {
             }
           : null;
       break;
+    case "Code":
+      validators.Code =
+        value.length < 5
+          ? {
+              content: "Please enter the correct verification code !",
+              pointing: "below"
+            }
+          : null;
+      break;
     case "Password":
       validators.Password =
         value.length < 8
@@ -103,6 +112,7 @@ const validatorFunction = (id, value, validators, password) => {
             }
           : null;
       break;
+
     default:
       break;
   }

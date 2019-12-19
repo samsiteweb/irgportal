@@ -17,7 +17,7 @@ import validatorFunction, {
 import axios from "axios";
 import UrlLib from "../../lib/urlLib";
 import AdminForm from "./adminform";
-import CompletedMessage from "./completedMessage";
+import CompletedMessage from "../../components/completedMessage";
 
 class RegisterAdmin extends Component {
   constructor(props) {
@@ -202,9 +202,15 @@ class RegisterAdmin extends Component {
             color: "orange",
             icon: "cancel",
             content: "Try Again"
+          },
+          message: {
+            show: true,
+            color: "orange",
+            messageText: err.response
+              ? err.response.data.Message
+              : "Please check internet connection"
           }
         }));
-        // console.log(err.response.data.Message);
       });
   };
   confirmDetail = () => {
@@ -373,7 +379,10 @@ class RegisterAdmin extends Component {
           false
         )}
         {formSubmitted ? (
-          <CompletedMessage handlepush={this.handlepush} />
+          <CompletedMessage
+            handlepush={this.handlepush}
+            message='completed your registration'
+          />
         ) : (
           false
         )}

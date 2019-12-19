@@ -7,6 +7,8 @@ import AccountUpdate from "./sections/update-account/accupdate";
 import ForgotPassword from "./sections/forgot-password/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import RegisterAdmin from "./sections/admin-reg/reg-admin";
+import ImageUploadInput from "./components/imageUpload/imageupload.comp";
+import UploadImage from "./sections/imageUpload/uploadimage";
 
 const Footer = () => {
   return (
@@ -28,6 +30,7 @@ function App() {
             <Route path='/forgotPass' component={ForgotPassword} />
             <Route path='/passReset' component={ResetPassword} />
             <Route path='/adminReg' component={RegisterAdmin} />
+            <Route path='/imgUpload' component={UploadImage} />
           </Switch>
         </Router>
       </div>

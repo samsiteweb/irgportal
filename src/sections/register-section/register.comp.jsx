@@ -1,7 +1,7 @@
 import React, { Component, createRef } from "react";
 import CardContainer from "../../components/card-container/card_container";
 
-import { Form, Button, Icon } from "semantic-ui-react";
+import { Form, Button, Placeholder } from "semantic-ui-react";
 import Formfield, {
   ActionInput
 } from "../../components/input-field/input_field";
@@ -11,6 +11,7 @@ import validatorFunction, {
   validateForm,
   InputToUpperCase
 } from "../../lib/validatorLib";
+import ImageUploadInput from "../../components/imageUpload/imageupload.comp";
 
 const options = [
   { key: "all", text: "Custom Code", value: "custom" },
@@ -20,8 +21,8 @@ const options = [
 const url = "https://iregisterkids.com/prod_sup/api/NewRegistration";
 class Register extends Component {
   inputRef = createRef();
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.getAccountCode = this.getAccountCode.bind(this);
     this.customAccountCode = this.customAccountCode.bind(this);
     this.confirmAccountCode = this.confirmAccountCode.bind(this);
@@ -225,24 +226,25 @@ class Register extends Component {
   }
 
   handleSubmit() {
-    if (validateForm(this.state.validators) && this.state.disableAll) {
-      console.log("form is valid");
-      axios
-        .post(url, {
-          AccountCode: this.state.Code,
-          Name: this.state.Name,
-          Email: this.state.Email,
-          Contact: this.state.Contact,
-          Address: this.state.Address,
-          Country: this.state.Country
-        })
-        .then(res => {
-          console.log(res);
-        })
-        .catch(e => console.log(e));
-    } else {
-      console.log("invalid form submitted");
-    }
+    this.props.history.push("/imgUpload");
+    // if (validateForm(this.state.validators) && this.state.disableAll) {
+    //   console.log("form is valid");
+    //   axios
+    //     .post(url, {
+    //       AccountCode: this.state.Code,
+    //       Name: this.state.Name,
+    //       Email: this.state.Email,
+    //       Contact: this.state.Contact,
+    //       Address: this.state.Address,
+    //       Country: this.state.Country
+    //     })
+    //     .then(res => {
+    //       console.log(res);
+    //     })
+    //     .catch(e => console.log(e));
+    // } else {
+    //   console.log("invalid form submitted");
+    // }
   }
   render() {
     const { Name, Email, Contact, Address, Country } = this.state.validators;
@@ -319,10 +321,7 @@ class Register extends Component {
             ref={this.inputRef}
             disableAll={this.state.disableAll}
           />
-          <div style={{ textAlign: "left" }}>
-            <Icon name='image outline' size='massive' color='grey' />
-            <Button size='mini' content='Upload Logo' />
-          </div>
+          <div style={{ textAlign: "left" }}></div>
         </Form>
         <div style={{ textAlign: "center", marginTop: "10px" }}>
           <Button

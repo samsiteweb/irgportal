@@ -7,8 +7,8 @@ import axios from "axios";
 import { validEmailRegex } from "../../lib/validatorLib";
 
 class ForgotPassword extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       email: "",
       message: "",
@@ -33,18 +33,18 @@ class ForgotPassword extends Component {
         }
       })
       .then(res => {
+        console.log(res);
         this.setState(prevState => ({
           ...prevState,
-          loading: false,
-          showMessage: true,
-          message: res.data.Message
+          loading: false
         }));
-        setTimeout(() => {
-          this.setState(prevState => ({
-            ...prevState,
-            showMessage: false
-          }));
-        }, 3000);
+        this.props.history.push({
+          pathname: "/passReset",
+          state: {
+            email: this.state.email,
+            id: res.data
+          }
+        });
       })
       .catch(e => {
         this.setState(prevState => ({

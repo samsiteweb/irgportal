@@ -1,14 +1,12 @@
 import React from "react";
 import { Card, Button } from "semantic-ui-react";
 
-const CompletedMessage = ({ handlepush }) => {
+const CompletedMessage = ({ handlepush, message }) => {
   return (
     <Card fluid style={{ textAlign: "center" }}>
       <Card.Content>
         <Card.Description>
-          <b>
-            Congratulations you have successfully completed your registration.
-          </b>
+          <b>{`Congratulations you have successfully ${message}`}.</b>
         </Card.Description>
         <div style={{ padding: "10px" }}>
           <Button
