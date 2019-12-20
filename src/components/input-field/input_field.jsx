@@ -53,8 +53,14 @@ export const ActionInput = React.forwardRef(
           options={options}
           onChange={getSelect}
           defaultValue={defaultValue}
+          disabled={disableAll}
         />
-        <Button color={color} loading={state} onClick={action}>
+        <Button
+          color={color}
+          loading={state}
+          onClick={action}
+          disabled={disableAll}
+        >
           {textContent}
         </Button>
       </Input>

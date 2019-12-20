@@ -131,10 +131,13 @@ export const InputToUpperCase = e => {
 
 export const validateForm = validators => {
   let valid = true;
-
+  // console.log(Object.values(validators), "list the objects");
   Object.values(validators).forEach(validator => {
     console.log(validator);
-    validator === null ? (valid = true) : (valid = false);
+    if (validator !== null) {
+      console.log("i have a false validator");
+      valid = false;
+    }
   });
   return valid;
 };

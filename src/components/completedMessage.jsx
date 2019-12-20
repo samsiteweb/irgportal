@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Button } from "semantic-ui-react";
 
-const CompletedMessage = ({ handlepush, message }) => {
+const CompletedMessage = ({ handlepush, message, btnMsg }) => {
   return (
     <Card fluid style={{ textAlign: "center" }}>
       <Card.Content>
@@ -11,7 +11,7 @@ const CompletedMessage = ({ handlepush, message }) => {
         <div style={{ padding: "10px" }}>
           <Button
             onClick={handlepush}
-            content='Proceed to Login'
+            content={`Proceed ${btnMsg}`}
             icon='checkmark'
             color='green'
           />

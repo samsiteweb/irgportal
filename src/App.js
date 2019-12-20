@@ -30,7 +30,7 @@ function App() {
             <Route path='/forgotPass' component={ForgotPassword} />
             <Route path='/passReset' component={ResetPassword} />
             <Route path='/adminReg' component={RegisterAdmin} />
-            <Route path='/imgUpload' component={UploadImage} />
+            <Route path='/imgUpload' component={ImageUploadInput} />
           </Switch>
         </Router>
       </div>
