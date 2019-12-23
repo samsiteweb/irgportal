@@ -5,6 +5,7 @@ import CardContainer from "../../components/card-container/card_container";
 import validatorFunction from "../../lib/validatorLib";
 import axios from "axios";
 import UrlLib from "../../lib/urlLib";
+import "./login-section.component.css";
 import MessageLabel from "../../components/message-label/messagelabel";
 
 export const DecisionBtn = ({ firstChoice, secondChoice, size, push }) => {
@@ -83,66 +84,68 @@ class Login extends Component {
   render() {
     const { validators, loading, message } = this.state;
     return (
-      <CardContainer
-        header='iRegisterKids Portal Login'
-        description='Please Enter your Credentials to Login'
-      >
-        {message.show ? (
-          <MessageLabel
-            icon='cancel'
-            color='orange'
-            message={message.message}
-          />
-        ) : null}
-        <Form style={{ paddingTop: 20 }}>
-          <Formfield
-            id='Credentials'
-            label='Credentials'
-            icon='user'
-            iconposition='left'
-            placeholder='Please enter credentials'
-            type='text'
-            getChange={this.handleChange}
-            error={validators.Credentials}
-          />
-          <Formfield
-            id='Password'
-            label='Password'
-            icon='key'
-            iconposition='left'
-            placeholder='Please enter Password'
-            type='text'
-            getChange={this.handleChange}
-            error={validators.Password}
-          />
-        </Form>
-
-        <div style={{ paddingTop: 20, textAlign: "center" }}>
-          <Button
-            size='huge'
-            fluid
-            color='violet'
-            content='Login'
-            onClick={this.handleSubmit}
-            loading={loading}
-          />
-
-          <DecisionBtn
-            firstChoice='Create Account'
-            secondChoice='Create Admin'
-            size='small'
-            push={this.props.history.push}
-          />
-
-          <div style={{ paddingTop: 10 }}>
-            <Button
-              size='mini'
-              content='Forgot password?'
-              onClick={() => this.props.history.push("/forgotPass")}
+      <div className='loginPage'>
+        <CardContainer
+          header='iRegisterKids Portal Login'
+          description='Please Enter your Credentials to Login'
+        >
+          {message.show ? (
+            <MessageLabel
+              icon='cancel'
+              color='orange'
+              message={message.message}
             />
+          ) : null}
+          <Form style={{ paddingTop: 20 }}>
+            <Formfield
+              id='Credentials'
+              label='Credentials'
+              icon='user'
+              iconposition='left'
+              placeholder='Please enter credentials'
+              type='text'
+              getChange={this.handleChange}
+              error={validators.Credentials}
+            />
+            <Formfield
+              id='Password'
+              label='Password'
+              icon='key'
+              iconposition='left'
+              placeholder='Please enter Password'
+              type='text'
+              getChange={this.handleChange}
+              error={validators.Password}
+            />
+          </Form>
+
+          <div style={{ paddingTop: 20, textAlign: "center" }}>
+            <Button
+              size='huge'
+              fluid
+              color='violet'
+              content='Login'
+              onClick={this.handleSubmit}
+              loading={loading}
+            />
+
+            <DecisionBtn
+              firstChoice='Create Account'
+              secondChoice='Create Admin'
+              size='small'
+              push={this.props.history.push}
+            />
+
+            <div style={{ paddingTop: 10 }}>
+              <Button
+                size='mini'
+                content='Forgot password?'
+                onClick={() => this.props.history.push("/forgotPass")}
+              />
+            </div>
           </div>
-        </div>
-      </CardContainer>
+        </CardContainer>
+      </div>
     );
   }
 }

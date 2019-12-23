@@ -9,6 +9,7 @@ import ResetPassword from "./components/resetpassword/resetpassword";
 import RegisterAdmin from "./sections/admin-reg/reg-admin";
 import ImageUploadInput from "./components/imageUpload/imageupload.comp";
 import UploadImage from "./sections/imageUpload/uploadimage";
+import Iportal from "./sections/portalsection/portal";
 
 const Footer = () => {
   return (
@@ -31,6 +32,7 @@ function App() {
             <Route path='/passReset' component={ResetPassword} />
             <Route path='/adminReg' component={RegisterAdmin} />
             <Route path='/imgUpload' component={ImageUploadInput} />
+            <Route path='/portal' component={Iportal} />
           </Switch>
         </Router>
       </div>

@@ -213,6 +213,7 @@ class RegisterAdmin extends Component {
         }));
       });
   };
+
   confirmDetail = () => {
     this.setState(() => ({
       accountActions: {
@@ -225,6 +226,7 @@ class RegisterAdmin extends Component {
       }
     }));
   };
+
   handleReject = () => {
     this.setState(() => ({
       accountActions: {
@@ -233,7 +235,6 @@ class RegisterAdmin extends Component {
       },
       buttonActions: {
         ...this.state.buttonActions,
-        // loadContent: false
         confirmBtn: true,
         rejectBtn: true,
         disabled: false,
@@ -244,6 +245,7 @@ class RegisterAdmin extends Component {
       data: false
     }));
   };
+
   handleChange = e => {
     e.preventDefault();
     InputToUpperCase(e).then(value => {
@@ -312,7 +314,6 @@ class RegisterAdmin extends Component {
                   <Grid.Column width='4'>
                     {data ? (
                       <Image
-                        // floated='left'
                         size='small'
                         src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'
                       />

@@ -280,49 +280,47 @@ class Register extends Component {
   handleSubmit() {
     this.setState({ subBtnLoader: true });
 
-    if (validateForm(this.state.validators) === true) {
+    if (validateForm(this.state.validators) === true && this.state.disableAll) {
       console.log("form is valid");
-      if (this.state.disableAll) {
-        axios
-          .post(url, {
-            AccountCode: this.state.Code,
-            Name: this.state.Name,
-            Email: this.state.Email,
-            Contact: this.state.Contact,
-            Address: this.state.Address,
-            Country: this.state.Country
-          })
-          .then(res => {
-            console.log(res);
-            this.setState({ subBtnLoader: false });
-            this.props.history.push("/imgUpload");
-          })
-          .catch(e => {
+      axios
+        .post(url, {
+          AccountCode: this.state.Code,
+          Name: this.state.Name,
+          Email: this.state.Email,
+          Contact: this.state.Contact,
+          Address: this.state.Address,
+          Country: this.state.Country
+        })
+        .then(res => {
+          console.log(res);
+          this.setState({ subBtnLoader: false });
+          this.props.history.push("/imgUpload");
+        })
+        .catch(e => {
+          this.setState({
+            msg: {
+              show: true,
+              msg: e.response
+                ? e.response.data.Message
+                : "Please check your internet connection"
+            }
+          });
+          setTimeout(() => {
             this.setState({
+              subBtnLoader: false,
               msg: {
-                show: true,
-                msg: e.response
-                  ? e.response.data.Message
-                  : "Please check your internet connection"
+                show: false
               }
             });
-            setTimeout(() => {
-              this.setState({
-                subBtnLoader: false,
-                msg: {
-                  show: false
-                }
-              });
-            }, 3000);
-          });
-      }
+          }, 3000);
+        });
     } else {
       console.log("submitted failed");
       this.setState({
         msg: {
           show: true,
           msg:
-            "Your attempt to submit an invalid form failed !!!. Please check the form for errors or empty spaces"
+            "Your attempt to submit an invalid form failed !!!. Please check the form for errors or empty fields"
         }
       });
       setTimeout(() => {
