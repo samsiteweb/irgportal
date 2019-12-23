@@ -5,6 +5,7 @@ import { Form, Button } from "semantic-ui-react";
 import MessageLabel from "../../components/message-label/messagelabel";
 import axios from "axios";
 import { validEmailRegex } from "../../lib/validatorLib";
+import "./forgotpassword.css";
 
 class ForgotPassword extends Component {
   constructor(props) {
@@ -100,39 +101,41 @@ class ForgotPassword extends Component {
   render() {
     const { email } = this.state.errors;
     return (
-      <CardContainer
-        header='Retrieve Password'
-        description={`Don't worry. Resetting your password is easy, just tell us the email address or mobile contact you registered with iRegisterkids.`}
-      >
-        {this.state.showMessage ? (
-          <MessageLabel
-            icon='cancel'
-            color='teal'
-            message={`${this.state.message}`}
-          />
-        ) : null}
+      <div className='forgotPassPage'>
+        <CardContainer
+          header='Retrieve Password'
+          description={`Don't worry. Resetting your password is easy, just tell us the email address or mobile contact you registered with iRegisterkids.`}
+        >
+          {this.state.showMessage ? (
+            <MessageLabel
+              icon='cancel'
+              color='teal'
+              message={`${this.state.message}`}
+            />
+          ) : null}
 
-        <Form style={{ marginTop: "10px" }}>
-          <Formfield
-            label='Registered Email Address'
-            icon='at'
-            iconposition='left'
-            getChange={this.handleChange}
-            getBlurChange={this.handleBlurChange}
-            id={"email"}
-            error={email}
-          />
-        </Form>
-        <div style={{ marginTop: "10px" }}>
-          <Button
-            size='large'
-            color='violet'
-            content='Send'
-            onClick={this.handleSend}
-            loading={this.state.loading}
-          />
-        </div>
-      </CardContainer>
+          <Form style={{ marginTop: "10px" }}>
+            <Formfield
+              label='Registered Email Address'
+              icon='at'
+              iconposition='left'
+              getChange={this.handleChange}
+              getBlurChange={this.handleBlurChange}
+              id={"email"}
+              error={email}
+            />
+          </Form>
+          <div style={{ marginTop: "10px" }}>
+            <Button
+              size='large'
+              color='violet'
+              content='Send'
+              onClick={this.handleSend}
+              loading={this.state.loading}
+            />
+          </div>
+        </CardContainer>
+      </div>
     );
   }
 }

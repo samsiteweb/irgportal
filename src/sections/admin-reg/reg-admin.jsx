@@ -273,121 +273,123 @@ class RegisterAdmin extends Component {
       buttonActions
     } = this.state;
     return (
-      <CardContainer
-        header='Admin Registration'
-        description='Note: An admin have the ability to create other admin'
-      >
-        <div style={{ textAlign: "center", marginTop: "10px" }}>
-          <Input
-            action={{
-              color: buttonActions.color,
-              labelPosition: "right",
-              icon: buttonActions.icon,
-              content: buttonActions.content,
-              onClick: () => this.verifyAccountCode(),
-              loading: buttonActions.resolved
-            }}
-            disabled={buttonActions.disabled}
-            onChange={this.handleChange}
-            placeholder='Enter Account Code'
-            focus={!buttonActions.disabled}
-          />
-        </div>
-        {buttonActions.loadContent ? (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginTop: "10px"
-            }}
-          >
-            <Card
-              fluid
+      <div>
+        <CardContainer
+          header='Admin Registration'
+          description='Note: An admin have the ability to create other admin'
+        >
+          <div style={{ textAlign: "center", marginTop: "10px" }}>
+            <Input
+              action={{
+                color: buttonActions.color,
+                labelPosition: "right",
+                icon: buttonActions.icon,
+                content: buttonActions.content,
+                onClick: () => this.verifyAccountCode(),
+                loading: buttonActions.resolved
+              }}
+              disabled={buttonActions.disabled}
+              onChange={this.handleChange}
+              placeholder='Enter Account Code'
+              focus={!buttonActions.disabled}
+            />
+          </div>
+          {buttonActions.loadContent ? (
+            <div
               style={{
-                marginLeft: "20px",
-                marginRight: "20px",
-                padding: "10px"
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "10px"
               }}
             >
-              <Grid>
-                <Grid.Row>
-                  <Grid.Column width='4'>
-                    {data ? (
-                      <Image
-                        size='small'
-                        src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'
-                      />
-                    ) : (
-                      <Placeholder style={{ height: 80, width: 80 }}>
-                        <Placeholder.Image />
-                      </Placeholder>
-                    )}
-                  </Grid.Column>
-                  <Grid.Column width='12'>
-                    {data ? (
-                      <div>
-                        <Card.Header>{data.AccountCode}</Card.Header>
-                        <Card.Meta>
-                          <span> {data.Email}</span>
-                        </Card.Meta>
+              <Card
+                fluid
+                style={{
+                  marginLeft: "20px",
+                  marginRight: "20px",
+                  padding: "10px"
+                }}
+              >
+                <Grid>
+                  <Grid.Row>
+                    <Grid.Column width='4'>
+                      {data ? (
+                        <Image
+                          size='small'
+                          src='https://react.semantic-ui.com/images/avatar/large/steve.jpg'
+                        />
+                      ) : (
+                        <Placeholder style={{ height: 80, width: 80 }}>
+                          <Placeholder.Image />
+                        </Placeholder>
+                      )}
+                    </Grid.Column>
+                    <Grid.Column width='12'>
+                      {data ? (
+                        <div>
+                          <Card.Header>{data.AccountCode}</Card.Header>
+                          <Card.Meta>
+                            <span> {data.Email}</span>
+                          </Card.Meta>
+                        </div>
+                      ) : (
+                        <Placeholder>
+                          <Placeholder.Line length='long' />
+                          <Placeholder.Line length='very long' />
+                        </Placeholder>
+                      )}
+                      <div style={{ paddingTop: "2px" }}>
+                        <Button
+                          content='Confirm'
+                          disabled={buttonActions.confirmBtn ? true : false}
+                          size='mini'
+                          color='teal'
+                          onClick={this.confirmDetail}
+                        />
+                        <Button
+                          content='Reject'
+                          disabled={buttonActions.rejectBtn ? true : false}
+                          size='mini'
+                          color='orange'
+                          onClick={this.handleReject}
+                        />
                       </div>
-                    ) : (
-                      <Placeholder>
-                        <Placeholder.Line length='long' />
-                        <Placeholder.Line length='very long' />
-                      </Placeholder>
-                    )}
-                    <div style={{ paddingTop: "2px" }}>
-                      <Button
-                        content='Confirm'
-                        disabled={buttonActions.confirmBtn ? true : false}
-                        size='mini'
-                        color='teal'
-                        onClick={this.confirmDetail}
-                      />
-                      <Button
-                        content='Reject'
-                        disabled={buttonActions.rejectBtn ? true : false}
-                        size='mini'
-                        color='orange'
-                        onClick={this.handleReject}
-                      />
-                    </div>
-                  </Grid.Column>
-                </Grid.Row>
-              </Grid>
-            </Card>
-          </div>
-        ) : (
-          false
-        )}
-        {message.show ? (
-          <MessageLabel
-            color={message.color}
-            icon='cancel'
-            message={message.messageText}
-          />
-        ) : null}
+                    </Grid.Column>
+                  </Grid.Row>
+                </Grid>
+              </Card>
+            </div>
+          ) : (
+            false
+          )}
+          {message.show ? (
+            <MessageLabel
+              color={message.color}
+              icon='cancel'
+              message={message.messageText}
+            />
+          ) : null}
 
-        {accountActions.confirm ? (
-          <AdminForm
-            state={this.state.validators}
-            handleChange={this.handleFormChange}
-            handleSubmit={this.handleSubmit}
-            resolve={loadSubmitBtn}
-          />
-        ) : (
-          false
-        )}
-        {formSubmitted ? (
-          <CompletedMessage
-            handlepush={this.handlepush}
-            message='completed your registration'
-          />
-        ) : (
-          false
-        )}
-      </CardContainer>
+          {accountActions.confirm ? (
+            <AdminForm
+              state={this.state.validators}
+              handleChange={this.handleFormChange}
+              handleSubmit={this.handleSubmit}
+              resolve={loadSubmitBtn}
+            />
+          ) : (
+            false
+          )}
+          {formSubmitted ? (
+            <CompletedMessage
+              handlepush={this.handlepush}
+              message='completed your registration'
+            />
+          ) : (
+            false
+          )}
+        </CardContainer>
+      </div>
     );
   }
 
