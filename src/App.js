@@ -8,16 +8,7 @@ import ForgotPassword from "./sections/forgot-password/forgotpassword";
 import ResetPassword from "./components/resetpassword/resetpassword";
 import RegisterAdmin from "./sections/admin-reg/reg-admin";
 import ImageUploadInput from "./components/imageUpload/imageupload.comp";
-import UploadImage from "./sections/imageUpload/uploadimage";
-import Iportal from "./sections/portalsection/portal";
-
-const Footer = () => {
-  return (
-    <div>
-      <h5>iGeeksNG Design Team. All rights reserved</h5>
-    </div>
-  );
-};
+import Iportal from "./sections/portalsection/portalpage/portal";
 
 function App() {
   return (
@@ -36,9 +27,7 @@ function App() {
           </Switch>
         </Router>
       </div>
-      <div className='flex-footer'>
-        <Footer />
-      </div>
+      <div className='flex-footer'></div>
     </div>
   );
 }

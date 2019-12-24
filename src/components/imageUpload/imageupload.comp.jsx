@@ -5,6 +5,7 @@ import axios from "axios";
 import UrlLib from "../../lib/urlLib";
 import MessageLabel from "../message-label/messagelabel";
 import CompletedMessage from "../completedMessage";
+import "./imageupload.css";
 
 class ImageUploadInput extends Component {
   constructor(props) {
@@ -118,93 +119,95 @@ class ImageUploadInput extends Component {
       successUpload
     } = this.state;
     return (
-      <CardContainer
-        header='Upload Organization Logo '
-        description='We are almost done ...'
-      >
-        {showMsg ? (
-          <MessageLabel message={msg} icon={msgIcon} color={msgColor} />
-        ) : null}
-        {successUpload ? (
-          <CompletedMessage
-            handlepush={() => {
-              this.props.history.push("/adminReg");
-            }}
-            btnMsg='to Admin Registration'
-            message='Uploaded your Organizations Logo'
-          />
-        ) : (
-          <div
-            style={{
-              textAlign: "left",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "space-between"
-            }}
-          >
-            <div style={{ marginTop: "10px", marginBottom: "10px" }}>
-              {this.state.file ? (
-                <img
-                  src={this.state.file}
-                  alt=''
-                  height='100px'
-                  width='100px'
+      <div className='imageUploadPage'>
+        <CardContainer
+          header='Upload Organization Logo '
+          description='We are almost done ...'
+        >
+          {showMsg ? (
+            <MessageLabel message={msg} icon={msgIcon} color={msgColor} />
+          ) : null}
+          {successUpload ? (
+            <CompletedMessage
+              handlepush={() => {
+                this.props.history.push("/adminReg");
+              }}
+              btnMsg='to Admin Registration'
+              message='Uploaded your Organizations Logo'
+            />
+          ) : (
+            <div
+              style={{
+                textAlign: "left",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "space-between"
+              }}
+            >
+              <div style={{ marginTop: "10px", marginBottom: "10px" }}>
+                {this.state.file ? (
+                  <img
+                    src={this.state.file}
+                    alt=''
+                    height='100px'
+                    width='100px'
+                  />
+                ) : (
+                  <Placeholder style={{ height: 80, width: 80 }}>
+                    <Placeholder.Image />
+                  </Placeholder>
+                )}
+              </div>
+              <div>
+                <Button
+                  content='Choose Image'
+                  size='mini'
+                  color='teal'
+                  onClick={() => this.fileInput.click()}
                 />
-              ) : (
-                <Placeholder style={{ height: 80, width: 80 }}>
-                  <Placeholder.Image />
-                </Placeholder>
-              )}
-            </div>
-            <div>
-              <Button
-                content='Choose Image'
-                size='mini'
-                color='teal'
-                onClick={() => this.fileInput.click()}
-              />
-              <Input size='mini'>
-                <input
-                  placeholder='select image'
-                  type='file'
-                  onChange={this.handleSelect}
-                  style={{ display: "none" }}
-                  ref={fileInput => (this.fileInput = fileInput)}
-                />
-                <input
-                  placeholder='select image'
-                  type='text'
-                  value={this.state.selectedFile.name}
-                  onChange={this.handleSelect}
-                />
-              </Input>
-            </div>
+                <Input size='mini'>
+                  <input
+                    placeholder='select image'
+                    type='file'
+                    onChange={this.handleSelect}
+                    style={{ display: "none" }}
+                    ref={fileInput => (this.fileInput = fileInput)}
+                  />
+                  <input
+                    placeholder='select image'
+                    type='text'
+                    value={this.state.selectedFile.name}
+                    onChange={this.handleSelect}
+                  />
+                </Input>
+              </div>
 
-            <div style={{ paddingLeft: "5px", paddingTop: "10px" }}>
-              {showProgress ? (
-                <Progress percent={this.state.percent} indicating progress>
-                  {progressMsg}
-                </Progress>
-              ) : null}
+              <div style={{ paddingLeft: "5px", paddingTop: "10px" }}>
+                {showProgress ? (
+                  <Progress percent={this.state.percent} indicating progress>
+                    {progressMsg}
+                  </Progress>
+                ) : null}
 
-              <Button
-                content='Upload Image'
-                color='violet'
-                size='tiny'
-                disabled={enableUpload}
-                onClick={this.fileUpload}
-              />
-              <Button
-                content='Skip to Admin Registration'
-                color='vk'
-                size='tiny'
-                onClick={() => this.fileInput.click()}
-              />
+                <Button
+                  content='Upload Image'
+                  color='violet'
+                  size='tiny'
+                  disabled={enableUpload}
+                  onClick={this.fileUpload}
+                />
+                <Button
+                  content='Skip to Admin Registration'
+                  color='vk'
+                  size='tiny'
+                  onClick={() => this.fileInput.click()}
+                />
+              </div>
             </div>
-          </div>
-        )}
-      </CardContainer>
+          )}
+        </CardContainer>
+      </div>
     );
   }
 }

@@ -10,6 +10,7 @@ import axios from "axios";
 import UrlLib from "../../lib/urlLib";
 import MessageLabel from "../message-label/messagelabel";
 import CompletedMessage from "../completedMessage";
+// import "./resetpassword.css";
 
 class ResetPassword extends Component {
   constructor(props) {
@@ -98,64 +99,68 @@ class ResetPassword extends Component {
   render() {
     const { validators, email, loading, showMessage, submitted } = this.state;
     return (
-      <CardContainer
-        header=' Reset Password'
-        description={`We have sent you a reset password code to ${email}. \n Kindly enter the code into the field below to set your new password`}
-      >
-        {showMessage ? (
-          <MessageLabel
-            color='orange'
-            icon='cancel'
-            message={this.state.message}
-          />
-        ) : null}
-        {submitted ? null : (
-          <Form>
-            <Formfield
-              id='Code'
-              label='Reset Code'
-              placeholder='Enter reset code'
-              icon='barcode'
-              iconposition='left'
-              getChange={this.handleChange}
-              error={validators.Code}
+      <div className='resetPassPage'>
+        <CardContainer
+          header=' Reset Password'
+          description={`We have sent you a reset password code to ${email}. \n Kindly enter the code into the field below to set your new password`}
+        >
+          {showMessage ? (
+            <MessageLabel
+              color='orange'
+              icon='cancel'
+              message={this.state.message}
             />
-            <Formfield
-              id='Password'
-              label='New password'
-              placeholder='Enter new password'
-              icon='low vision'
-              iconposition='left'
-              getChange={this.handleChange}
-              error={validators.Password}
-            />
-            <Formfield
-              id='ConfirmPassword'
-              placeholder='Confirm Password'
-              icon='low vision'
-              iconposition='left'
-              getChange={this.handleChange}
-              error={validators.ConfirmPassword}
-            />
-            <div style={{ textAlign: "center", marginTop: "10px" }}>
-              <Button
-                content='Submit'
-                color='violet'
-                onClick={this.handleSubmit}
-                loading={loading}
+          ) : null}
+          {submitted ? null : (
+            <Form>
+              <Formfield
+                id='Code'
+                label='Reset Code'
+                placeholder='Enter reset code'
+                icon='barcode'
+                iconposition='left'
+                getChange={this.handleChange}
+                error={validators.Code}
               />
-            </div>
-          </Form>
-        )}
-        {submitted ? (
-          <CompletedMessage
-            handlepush={this.handlepush}
-            message='changed your password'
-          />
-        ) : (
-          false
-        )}
-      </CardContainer>
+              <Formfield
+                id='Password'
+                label='New password'
+                placeholder='Enter new password'
+                icon='low vision'
+                iconposition='left'
+                type='password'
+                getChange={this.handleChange}
+                error={validators.Password}
+              />
+              <Formfield
+                id='ConfirmPassword'
+                placeholder='Confirm Password'
+                icon='low vision'
+                iconposition='left'
+                type='password'
+                getChange={this.handleChange}
+                error={validators.ConfirmPassword}
+              />
+              <div style={{ textAlign: "center", marginTop: "10px" }}>
+                <Button
+                  content='Submit'
+                  color='violet'
+                  onClick={this.handleSubmit}
+                  loading={loading}
+                />
+              </div>
+            </Form>
+          )}
+          {submitted ? (
+            <CompletedMessage
+              handlepush={this.handlepush}
+              message='changed your password'
+            />
+          ) : (
+            false
+          )}
+        </CardContainer>
+      </div>
     );
   }
   handlepush = () => {

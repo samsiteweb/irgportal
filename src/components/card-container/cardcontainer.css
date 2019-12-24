@@ -1,0 +1,17 @@
+.cardContainer {
+  display: flex;
+  height: 100vh;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(247, 247, 247);
+  overflow: auto;
+  /* overflow-y: scroll; */
+}
+
+.menu {
+  justify-content: center;
+  align-items: center;
+  background: blanchedalmond;
+  background-color: bisque;
+}

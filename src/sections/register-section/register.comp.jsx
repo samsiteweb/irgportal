@@ -392,7 +392,7 @@ class Register extends Component {
             icon='map'
             iconposition='left'
             placeholder='Organisation country of residence'
-            type='email'
+            type='text'
             getChange={this.handleChange}
             error={Country}
           />

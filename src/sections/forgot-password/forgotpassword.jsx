@@ -101,7 +101,7 @@ class ForgotPassword extends Component {
   render() {
     const { email } = this.state.errors;
     return (
-      <div className='forgotPassPage'>
+      <div>
         <CardContainer
           header='Retrieve Password'
           description={`Don't worry. Resetting your password is easy, just tell us the email address or mobile contact you registered with iRegisterkids.`}

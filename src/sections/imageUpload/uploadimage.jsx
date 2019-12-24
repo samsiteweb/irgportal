@@ -5,7 +5,7 @@ import "./uploadimage.css";
 
 const UploadImage = () => {
   return (
-    <div className='uploadImagePage'>
+    <div className=''>
       <CardContainer
         header='Upload Organization Logo '
         description='We are almost done ...'

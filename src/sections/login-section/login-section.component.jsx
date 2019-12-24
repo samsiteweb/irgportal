@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Form, Button } from "semantic-ui-react";
 import Formfield from "../../components/input-field/input_field";
 import CardContainer from "../../components/card-container/card_container";
-import validatorFunction from "../../lib/validatorLib";
 import axios from "axios";
 import UrlLib from "../../lib/urlLib";
 import "./login-section.component.css";
@@ -84,9 +83,9 @@ class Login extends Component {
   render() {
     const { validators, loading, message } = this.state;
     return (
-      <div className='loginPage'>
+      <div>
         <CardContainer
-          header='iRegisterKids Portal Login'
+          header='Portal Login'
           description='Please Enter your Credentials to Login'
         >
           {message.show ? (
@@ -113,7 +112,7 @@ class Login extends Component {
               icon='key'
               iconposition='left'
               placeholder='Please enter Password'
-              type='text'
+              type='password'
               getChange={this.handleChange}
               error={validators.Password}
             />
