@@ -6,37 +6,36 @@ const validatorFunction = (id, value, validators, password) => {
   switch (id) {
     case "Name":
       validators.Name =
-        value.length < 5
+        value.length < 1
           ? {
-              content:
-                "Organization name cannot be less than 5 characters long !",
+              content: "Organization name cannot be empty !!!",
               pointing: "below"
             }
           : null;
       break;
     case "Credentials":
       validators.Credentials =
-        value.length < 5
+        value.length < 1
           ? {
-              content: "characters cannot be less than 5sam !",
+              content: "characters cannot be empty !",
               pointing: "below"
             }
           : null;
       break;
     case "FirstName":
       validators.FirstName =
-        value.length < 5
+        value.length < 1
           ? {
-              content: "Firstname cannot be less than 5 characters long !",
+              content: "Firstname cannot be empty !",
               pointing: "below"
             }
           : null;
       break;
     case "LastName":
       validators.LastName =
-        value.length < 5
+        value.length < 1
           ? {
-              content: "Lastname cannot be less than 5 characters long !",
+              content: "Lastname cannot be empty !",
               pointing: "below"
             }
           : null;
@@ -51,43 +50,43 @@ const validatorFunction = (id, value, validators, password) => {
       break;
     case "Contact":
       validators.Contact =
-        value.length < 7
+        value.length < 1
           ? {
-              content: "Contact cannot be less than 7 digits !",
+              content: "Contact cannot be empty !",
               pointing: "below"
             }
           : null;
       break;
     case "Username":
       validators.Username =
-        value.length < 8
+        value.length < 1
           ? {
-              content: "Username cannot be less than 8 characters long !",
+              content: "Username cannot be empty !",
               pointing: "below"
             }
           : null;
       break;
     case "Address":
       validators.Address =
-        value.length < 10
+        value.length < 1
           ? {
-              content: "Address must not be less than 10 characters long !",
+              content: "Address cannot be empty !",
               pointing: "below"
             }
           : null;
       break;
     case "Country":
       validators.Country =
-        value.length < 2
+        value.length < 1
           ? {
-              content: "Country of Origin cannot be empty !",
+              content: "Country cannot be empty !",
               pointing: "below"
             }
           : null;
       break;
     case "Code":
       validators.Code =
-        value.length < 5
+        value.length < 1
           ? {
               content: "Please enter the correct verification code !",
               pointing: "below"
@@ -96,9 +95,9 @@ const validatorFunction = (id, value, validators, password) => {
       break;
     case "Password":
       validators.Password =
-        value.length < 8
+        value.length < 1
           ? {
-              content: "Password must be at least 8 characters long !",
+              content: "Password cannot be empty !",
               pointing: "below"
             }
           : null;
