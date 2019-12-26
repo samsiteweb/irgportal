@@ -16,7 +16,7 @@ const validatorFunction = (id, value, validators, password) => {
       break;
     case "Credentials":
       validators.Credentials =
-        value.length < 5
+        value.length < 1
           ? {
               content: "characters cannot be less than 5sam !",
               pointing: "below"
@@ -25,7 +25,7 @@ const validatorFunction = (id, value, validators, password) => {
       break;
     case "FirstName":
       validators.FirstName =
-        value.length < 5
+        value.length < 1
           ? {
               content: "Firstname cannot be less than 5 characters long !",
               pointing: "below"
@@ -60,7 +60,7 @@ const validatorFunction = (id, value, validators, password) => {
       break;
     case "Username":
       validators.Username =
-        value.length < 8
+        value.length < 1
           ? {
               content: "Username cannot be less than 8 characters long !",
               pointing: "below"
